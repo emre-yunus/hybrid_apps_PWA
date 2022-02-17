@@ -27,6 +27,14 @@ function showNextPokemon() {
     typeElem.innerText = pokemonToShow.type;
 }
 
+async function deleteOldCaches() {
+    const keyList = await caches.keys();
+    const arrayOfPromises = keyList.map(key => {
+        console.log(key.toString() + " cache has been deleted.");
+        return caches.delete(key); //returns a Promise
+    });
+    await Promise.all(arrayOfPromises);
+}
 
 // Register service worker to control making site work offline
 async function registerServiceWorker() {
