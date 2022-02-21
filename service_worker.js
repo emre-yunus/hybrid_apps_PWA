@@ -50,14 +50,28 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', async (e) => {
     console.log(`@@@@ Service Worker ${version}: handle fetch event ${e.request.url}`);
 
-    if (!!(await caches.keys())) {
+    /*if (!!(await caches.keys())) {
         await initializeCache();
-    }
+    }*/
 
     async function findResponseInCache() {
+        if (!!(await caches.keys())) {
+            await initializeCache();
+        }
         const responseFromCache = await caches.match(e.request);
         return responseFromCache || fetch(e.request);
     }
 
     e.respondWith(findResponseInCache());
+});
+
+self.addEventListener('message', event => {
+    console.log(event);
+    switch(event.data.command) {
+        case "REQUEST_VERSION":
+            event.source.postMessage({command: "REQUEST_VERSION", payload: version});
+            break;
+        default:
+            console.logg("Error: unknown message!");
+    }
 });

@@ -42,8 +42,11 @@ async function registerServiceWorker() {
         console.log("start registering Service Worker");
         const serviceWorkerRegistration = await navigator.serviceWorker.register('service_worker.js');
         console.log('registration Service Worker done');
+        serviceWorkerRegistration.active?.postMessage({command: "REQUEST_VERSION"});
+        //console.log(serviceWorkerRegistration);
     } else {
         console.log("geen Service Worker mogelijk in deze browser");
     }
 }
 registerServiceWorker();
+
